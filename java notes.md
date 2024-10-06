@@ -4409,3 +4409,840 @@ public class Test {
     }
 }
 ```
+
+# JUC
+
+## ForkJoin 框架
+
+ForkJoin 框架是 JDK1.7 之后提供的一个多线程并发处理框架，本质上是对线程池的一种补充，它的核心思想是将一个大型任务拆分成多个小任务，分别执行，最终将小任务的结果进行汇总，形成最终的结果。
+
+拆分
+
+多个任务 + 多个线程
+
+- ForkJoinTask 表示任务
+- ForkJoinPool 表示线程（线程池的一种扩展）
+
+## 递归
+
+什么是递归？
+
+定义：编程语言中，函数直接或间接调用函数本身，则该函数称为递归，一个方法自己调自己
+
+电影院求自己是第几排的问题，递推公式：
+
+```java
+f(n) = f(n-1)+1,f(1)=1
+```
+
+递归代码：
+
+```java
+int f(int n){
+    if(n==1) return 1;
+	return f(n-1)+1;
+}
+```
+
+递归需要满足 3 要素：
+
+1、一个父问题可以拆分成若干个子问题，并且若干个子问题的结果汇总起来就是父问题的结果
+
+2、父问题和子问题，解题思路完全一致，只是数据规模不同
+
+3、存在终止条件
+
+假如有 n 个台阶，每次你可以跨 1 个台阶或者 2 个台阶，请求 n 个台阶一共有多少种走法？
+
+可以根据第一步的走法将所有走法分为两类
+
+第一类是第一步走了一个台阶，第二类是第一步走了两个台阶
+
+n 个台阶的走法就等于先走 1 个台阶后，n-1 个台阶的走法 + 先走 2 个台阶，n-2 个台阶的走法
+
+递推公式：
+
+```
+f(1) = 1
+f(2) = 2
+f(n) = f(n-1) + f(n-2)
+```
+
+终止条件
+
+f(1) = 1
+
+f(2) = 2
+
+n = 1,f(1) =1
+
+n = 2,f(2) = 2
+
+n = 3,f(3) = f(2) + f(1) = 3
+
+n = 4,f(4) = f(3) + f(2) = 5
+
+递归代码：
+
+```java
+int f(int n){
+	if(n == 1) return 1;
+	if(n == 2) return 2;
+	return f(n-1) + f(n-2);
+}
+```
+
+1、创建一个 ForkJoinTask 任务，ForkJoinTask 是一个抽象类，需要创建一个类来继承 ForkJoinTask 的子类 RecursiveTask，实现抽象方法 compute，拆分的逻辑就写在 compute 方法中。
+
+2、任务要通过 ForkJoinPool 来执行，将任务直接放入 ForkJoinPool 中，直接获取结果即可。
+
+计算 0~20 亿数字相加之和
+
+```java
+import java.util.concurrent.RecursiveTask;
+
+public class ForkJoinDemo extends RecursiveTask<Long> {
+
+    private Long start;
+    private Long end;
+    private Long temp = 100_0000L;
+
+    public ForkJoinDemo(Long start,Long end){
+        this.start = start;
+        this.end = end;
+    }
+
+    @Override
+    protected Long compute() {
+        if((end - start) < temp){
+            Long sum = 0L;
+            for (Long i = start;i<=end;i++){
+                sum += i;
+            }
+            return sum;
+        } else {
+            Long avg = (start + end)/2;
+            ForkJoinDemo task1 = new ForkJoinDemo(start, avg);
+            task1.fork();
+            ForkJoinDemo task2 = new ForkJoinDemo(avg+1, end);
+            task2.fork();
+            return task1.join() + task2.join();
+        }
+    }
+}
+```
+
+```java
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
+
+public class Test {
+    public static void main(String[] args) {
+        Long startTime = System.currentTimeMillis();
+        ForkJoinPool forkJoinPool = new ForkJoinPool();
+        ForkJoinTask<Long> task = new ForkJoinDemo(0L, 20_0000_0000L);
+        forkJoinPool.execute(task);
+        Long sum = 0L;
+        try {
+            sum = task.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        Long endTime = System.currentTimeMillis();
+        System.out.println(sum + ",耗时" + (endTime - startTime) + "毫秒");
+    }
+}
+```
+
+## volatile 关键字
+
+```java
+public class SingletonDemo {
+    private volatile static SingletonDemo instance;
+    public SingletonDemo(){
+        System.out.println("创建了一个SingletonDemo对象");
+    }
+    public static SingletonDemo getInstance(){
+        if(instance == null){
+            synchronized (SingletonDemo.class){
+                if(instance == null) {
+                    instance = new SingletonDemo();
+                }
+            }
+        }
+        return instance;
+    }
+}
+```
+
+volatile 关键字的作用是可以使内存中的数据对线程可见
+
+Java 内存模型 JMM Java Memory Model
+
+一个线程在访问内存数据的时候，其实不是拿到数据本身，而是将数据复制保存到工作内存中，相当于使用的是一个副本，对工作内存中的数据进行修改，修改完成之后再保存到主内存中，主内存对线程不可见。
+
+```java
+import java.util.concurrent.TimeUnit;
+
+public class Test3 {
+    private static int num = 0;
+    public static void main(String[] args) {
+        new Thread(()->{
+            while (num == 0){
+
+            }
+        }).start();
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        num = 1;
+        System.out.println(num);
+    }
+}
+```
+
+结果输出 1，但是循环没有停止，因为主内存对线程不可见，子线程从主内存中取出 num=0 放入到工作内存，主线程也从主内存中取出 num = 0 放入工作内存，执行 num = 1，然后将 num = 1 还回到主内存中，但是此时，子线程的工作内存中的 num = 0，所以循环不会结束。
+
+```java
+import java.util.concurrent.TimeUnit;
+
+public class Test3 {
+    private static volatile int num = 0;//加上volatile关键字
+    public static void main(String[] args) {
+        new Thread(()->{
+            while (num == 0){
+                System.out.println("---Thread---");
+            }
+        }).start();
+
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        num = 1;
+        System.out.println(num);
+    }
+}
+```
+
+# 集合框架
+
+什么是集合？
+
+多个对象，个数未知，类型未知
+
+集合可以简单理解为一个长度可以改变，可以保存任意数据类型的动态数组
+
+在 Java 中，集合不是由一个类来完成的，而是由一组接口和类共同构成了一个框架体系，大致可分为 3 层，最上层是一组接口，继而是接口的实现类，接下来就是对集合各种操作的工具类
+
+| 接口         | 描述                                                                                   |
+| ------------ | -------------------------------------------------------------------------------------- |
+| Collection   | 集合框架最基础的接口，一个 Collection 存储一组无序、不唯一的对象，一般不直接使用该接口 |
+| List         | Collection 的子接口，存储一组有序、不唯一的对象，开发中常用的接口之一                  |
+| Set          | Collection 的子接口，存储一组无序、唯一的对象                                          |
+| Map          | 独立于 Collection 的另外一个接口，存储一组键值对象、提供键到值的映射                   |
+| Iterator     | 专用用来输出集合元素的接口，一般适用于无序集合，从前向后单向输出元素                   |
+| ListIterator | Iterator 的子接口，可以双向输出集合中的元素                                            |
+| Enumeration  | 传统的输出接口，已经被 Iterator 所取代                                                 |
+| SortedSet    | Set 的子接口，可以对集合中的元素进行排序                                               |
+| SortedMap    | Map 的子接口，可以对集合中的键值元素进行排序                                           |
+| Queue        | 队列接口，此接口的实现类可以实现队列操作                                               |
+| Map.Entry    | Map 的内部接口，描述 Map 中的一个键值对元素                                            |
+
+# 集合
+
+## Collection 接口
+
+Collection 是集合框架中最基础的父接口，可以存储一组无序、不唯一的对象
+
+Iterable 专门用来迭代，把集合中的元素全部取出来
+
+Collection 中的所有元素可以通过 Iterator 进行迭代（List、Set）
+
+Collection 常用方法
+
+| 方法                              | 描述                                   |
+| --------------------------------- | -------------------------------------- |
+| int size()                        | 获取集合长度                           |
+| boolean isEmpty()                 | 判断集合是否为空                       |
+| boolean contains(Object o)        | 判断集合中是否包含某个元素             |
+| Iterator<E> iterator()            | 实例化 Iterator 接口，遍历集合         |
+| Object[] toArray()                | 将集合转换为一个 Object 类型的对象数组 |
+| boolean add(E e)                  | 向集合中添加元素                       |
+| boolean remove(Object o)          | 从集合中移除元素                       |
+| boolean containsAll(Collection c) | 判断集合中是否存在某个集合的所有元素   |
+| boolean addAll(Collection c)      | 向集合中添加某个集合的所有元素         |
+| boolean removeAll(Collection c)   | 从集合中移除满足条件的另一个集合       |
+| void clear()                      | 清空集合                               |
+| boolean equals(Object o)          | 比较两个集合是否相等                   |
+| int hashCode()                    | 获取集合对象的散列值                   |
+
+## Collection 的子接口
+
+使用其子接口
+
+- List：存放有序、不唯一的元素
+- Set：存放无序、唯一的元素
+- Queue：队列接口
+
+## List 接口
+
+List 接口在继承 Collection 接口的基础上进行了扩展，常用的扩展方法
+
+| 方法                                       | 描述                               |
+| ------------------------------------------ | ---------------------------------- |
+| E get(int index)                           | 通过下标获取集合中指定位置的元素   |
+| E set(int index,E element)                 | 替换集合中指定位置的元素           |
+| void add(int index.E element)              | 向集合中的指定位置添加元素         |
+| E remove(int index)                        | 通过下标删除集合中指定位置的元素   |
+| int indexOf(Object o)                      | 查找某个对象在集合中的下标         |
+| int lastIndexOf(Object o)                  | 从后向前查找某个对象在集合中的下标 |
+| ListIterator<E> listIterator()             | 实例化 ListIterator 接口           |
+| List<E> subList(int fromIndex,int toIndex) | 获取集合中的子集合                 |
+
+## List 接口的实现类
+
+ArrayList 实现了长度可变的数组
+
+优点：查找快，因为元素都是连续的，可以通过公式快速求出下标从而取出元素
+
+缺点：增删慢，因为元素都是连续的，添加一个元素，就必须先将后续的元素依次后移一位，再把新元素加入，删除同理
+
+```java
+toString()方法重写
+public String toString() {
+    Iterator<E> it = iterator()
+    if (! it.hasNext())
+        return "[]";
+
+    StringBuilder sb = new StringBuilder();
+    sb.append('[');
+    for (;;) {
+        E e = it.next();
+        sb.append(e == this ? "(this Collection)" : e);
+        if (! it.hasNext())
+            return sb.append(']').toString();
+        sb.append(',').append(' ');
+    }
+}
+```
+
+ArrayList 常用方法
+
+```java
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class Test {
+    public static void main(String[] args) {
+        ArrayList list = new ArrayList();
+        list.add("Hello");
+        list.add("World");
+        list.add("JavaSE");
+        list.add("JavaME");
+        list.add("JavaEE");
+        System.out.println(list.toString());
+        System.out.println(list.size());
+        System.out.println(list.contains("Java"));
+        Iterator iterator = list.iterator();
+        while (iterator.hasNext()){
+            Object next = iterator.next();
+            System.out.println(next);
+        }
+        System.out.println("********************************");
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println(list.get(i));
+        }
+        list.remove(0);
+        System.out.println("*************************************");
+        System.out.println(list);
+        list.remove("JavaSE");
+        System.out.println(list);
+        list.add("a");
+        System.out.println(list);
+        list.add(1, "b");
+        System.out.println(list);
+        list.set(1, "c");
+        System.out.println(list);
+        System.out.println(list.indexOf("cc"));
+        List list1 = list.subList(1, 3);
+        System.out.println(list1);
+    }
+}
+```
+
+注释
+
+```java
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class Test {
+    public static void main(String[] args) {
+        ArrayList list = new ArrayList();
+        list.add("Hello");
+        list.add("World");
+        list.add("JavaSE");
+        list.add("JavaME");
+        list.add("JavaEE");
+//      方式1：通过list直接打印出所有的值
+        System.out.println(list);
+//        默认调用了 toString方法，如下
+//        System.out.println(list.toString());
+        System.out.println(list.size());
+        System.out.println(list.contains("Java"));
+//      方式2：通过迭代器进行迭代的方式获取list里面的值
+        Iterator iterator = list.iterator();
+        while (iterator.hasNext()) {
+            Object next = iterator.next();
+            System.out.println(next);
+        }
+//      方式3：通过for循环获取list中的值
+        System.out.println("******************");
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println(list.get(i));
+        }
+
+//      通过remove位置的方式移除某一个坐标的值
+        list.remove(0);
+        System.out.println("******************");
+        System.out.println(list);
+
+//      通过指定remove某一个元素的方式直接移除某一个值
+        list.remove("JavaSE");
+        System.out.println(list);
+        System.out.println("******************");
+
+//      给集合最后的位置追加一个元素
+        list.add("a");
+        System.out.println(list);
+        System.out.println("******************");
+
+//      在指定的位置，追加一个元素，原位置以及其后的元素整体后移
+        list.add(1,"b");
+        System.out.println(list);
+        System.out.println("******************");
+
+//      替换掉指定位置的元素
+        list.set(1,"c");
+        System.out.println(list);
+        System.out.println("******************");
+
+        //获取存在的元素的下表
+        list.indexOf("c");
+        System.out.println(list);
+        //获取不存在元素的下标，会返回-1
+        System.out.println(list.indexOf("cc"));
+
+        //截取下标1~3的元素设置为子集合list1,此时是左开右闭的[1, 3)，即>=1,同时<3的下标的范围
+        List list1 = list.subList(1,3);
+        System.out.println(list1);
+    }
+}
+
+```
+
+LinkedList 采用链表即后继指针的形式来存储数据，和 ArrayList 恰好相反
+
+优点：增删快
+
+缺点：查询慢
+
+```java
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+public class Test {
+    public static void main(String[] args) {
+        LinkedList list = new LinkedList();
+        list.add("Hello");
+        list.add("World");
+        list.add("Java");
+        System.out.println(list);
+        list.offer("JavaSE");
+        list.offer("JavaSE2");
+        System.out.println(list);
+        list.push("JavaME");
+        System.out.println(list);
+        list.addFirst("JavaME2");
+        System.out.println(list);
+        System.out.println(list.peekFirst());
+        System.out.println(list.peekLast());
+        System.out.println(list);
+        System.out.println(list.pollFirst());
+        System.out.println(list.pollLast());
+        System.out.println(list);
+    }
+}
+```
+
+注解
+
+```java
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+public class Test {
+    public static void main(String[] args) {
+        //创建链表对象
+        LinkedList list = new LinkedList();
+        //向链表末位追加元素
+        list.add("Hello");
+        list.add("World");
+        list.add("Java");
+        System.out.println(list);
+
+        //向链表末位追加元素
+        list.offer("JavaSE");
+        list.offer("JavaSE2");
+        System.out.println(list);
+
+        //向链表首位追加元素
+        list.push("JavaME");
+        System.out.println(list);
+
+        //向链表首位追加元素
+        list.addFirst("JavaME2");
+        System.out.println(list);
+
+        //读出链表首位元素,不更改链表的元素列表本身
+        System.out.println(list.peekFirst());
+        //读出末位元素，不更改链表的元素列表本身
+        System.out.println(list.peekLast());
+
+        //取出链表的首位元素，更改链表的元素列表
+        System.out.println(list.pollFirst());
+        //取出链表的末位元素，更改链表的元素列表
+        System.out.println(list.pollLast());
+        System.out.println(list);
+
+    }
+}
+```
+
+## Set 接口
+
+Set 接口是 Collection 的子接口，Set 接口以散列的形式存储数据，所以元素是无序的，可以存储一组无序且唯一的对象。
+
+## Set 接口的实现类
+
+HashSet 存储一组无序且唯一的元素，这里的无序是指元素的存储顺序和遍历顺序不一致。
+
+```java
+import java.util.*;
+
+public class Test {
+    public static void main(String[] args) {
+        HashSet hashSet = new HashSet();
+        hashSet.add("Hello");
+        hashSet.add("World");
+        hashSet.add("Java");
+        hashSet.add("Hello");
+        System.out.println(hashSet.size());
+        Iterator iterator = hashSet.iterator();
+        while (iterator.hasNext()){
+            System.out.println(iterator.next());
+        }
+        hashSet.remove("World");
+        Iterator iterator1 = hashSet.iterator();
+        while (iterator1.hasNext()){
+            System.out.println(iterator1.next());
+        }
+    }
+}
+```
+
+LinkedHashSet 是 Set 的另外一个子接口，可以存储一组有序且唯一的元素，这里的有序是指元素的存储顺序和遍历顺序是一致。
+
+```java
+import java.util.*;
+
+public class Test {
+    public static void main(String[] args) {
+        LinkedHashSet set = new LinkedHashSet();
+        set.add("Hello");
+        set.add("World");
+        set.add("Java");
+        set.add("Hello");
+        System.out.println(set.size());
+        Iterator iterator = set.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
+        set.remove("World");
+        System.out.println(set);
+    }
+}
+```
+
+```java
+import java.util.*;
+
+public class Test {
+    public static void main(String[] args) {
+        LinkedHashSet set = new LinkedHashSet();
+        set.add(new A(1));
+        set.add(new A(1));
+        Iterator iterator = set.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
+    }
+}
+
+class A{
+    private int num;
+
+    public A(int num) {
+        this.num = num;
+    }
+
+    @Override
+    public String toString() {
+        return "A{" +
+                "num=" + num +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        A a = (A) o;
+        return num == a.num;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(num);
+    }
+}
+```
+
+TreeSet 存储一组有序、唯一的元素，TreeSet 的有序和 LinkedHashSet 的有序不一样。
+
+LinkedHashSet 的有序是指元素的存储顺序和遍历顺序一致，TreeSet 的有序是指集合内部会自动给所有的元素按照升序进行排列。
+
+```java
+import java.util.*;
+
+public class Test {
+    public static void main(String[] args) {
+        TreeSet treeSet = new TreeSet();
+        treeSet.add(new A(1));
+        treeSet.add(new A(3));
+        treeSet.add(new A(6));
+        treeSet.add(new A(2));
+        treeSet.add(new A(5));
+        treeSet.add(new A(4));
+        treeSet.add(new A(1));
+        Iterator iterator = treeSet.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
+    }
+}
+
+class A implements Comparable{
+    private int num;
+
+    public A(int num) {
+        this.num = num;
+    }
+
+    /**
+     * A.compareTo(B)
+     * 1表示A大于B
+     * 0表示A等于B
+     * -1表示A小于B
+     * @param o
+     * @return
+     */
+    @Override
+    public int compareTo(Object o) {
+        A a = (A)o;
+        if(this.num < a.num){
+            return 1;
+        }
+        if(this.num > a.num){
+            return -1;
+        }
+        return 0;
+    }
+
+    /**
+     *  @Override
+    //升序
+//    public int compareTo(Object o) {
+//        A a = (A) o;
+//        if (this.num > a.num) {
+//            return 1;
+//        }
+//
+//        if (this.num < a.num) {
+//            return -1;
+//        }
+//        return 0;
+//    }
+
+    //降序
+    public int compareTo(Object o) {
+        A a = (A) o;
+        if (this.num < a.num) {
+            return 1;
+        }
+
+        if (this.num > a.num) {
+            return -1;
+        }
+        return 0;
+    }
+    */
+
+    @Override
+    public String toString() {
+        return "A{" +
+                "num=" + num +
+                '}';
+    }
+}
+```
+
+## Map 接口
+
+Map 接口是与 Collection 接口完全独立的另一个体系。
+
+区别在于 Set、List、Collection 只能操作单个元素，Map 可以操作一对元素，Map 中的元素都是以 key-value 的形式进行存储的。
+
+| 方法                                | 描述                              |
+| ----------------------------------- | --------------------------------- |
+| int size()                          | 获取集合长度                      |
+| boolean isEmpty()                   | 判断集合是否为空                  |
+| boolean containsKey(Object key)     | 判断集合中是否存在 key            |
+| boolean containsValue(Object value) | 判断集合中是否存在 value          |
+| V get(Object key)                   | 通过 key 取出对应的 value         |
+| V put(Object key,Object value)      | 向集合中添加一组 key-value        |
+| V remove(Object key)                | 通过 key 删除集合元素             |
+| void clear()                        | 清空集合                          |
+| Set keySet()                        | 取出所有的 key，返回 Set          |
+| Collection values()                 | 取出所有的 value，返回 Collection |
+| Set entrySet()                      | 将 Map 转换为 Set 对象            |
+| int hashCode()                      | 获取集合的散列码                  |
+| boolean equals(Object o)            | 比较两个集合是否相等              |
+
+## Map 接口的实现类
+
+- HashMap：存储一组无序、key 不可重复，value 可重复的元素
+- Hashtable：存储一组无序、key 不可重复，value 可以重复的元素
+- TreeMap：存储一组有序、key 不可重复、value 可以重复的元素，可以按照 key 来排序
+
+HashMap 常用方法
+
+```java
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+
+public class Test {
+    public static void main(String[] args) {
+        HashMap hashMap = new HashMap();
+        hashMap.put("h", "Hello");
+        hashMap.put("w", "World");
+        hashMap.put("j","Java");
+        hashMap.put("s","JavaSE");
+        hashMap.put("m","JavaME");
+        hashMap.put("e","JavaEE");
+        System.out.println(hashMap);
+//        通过.remove(key)移除集合中的元素
+        hashMap.remove("e");
+        System.out.println(hashMap);
+//        通过.put(key, value)的方式，向集合中添加一组key-value的元素，但是HashMap用来存储一组无序、key 不可重复，value 可重复的元素，
+//        因此对于“m”已经有对应的value元素了，新追加的value元素会覆盖掉已有的元素。
+        hashMap.put("m","Model");
+        System.out.println(hashMap);
+//      HashMap用来存储一组无序、key 不可重复，value 可重复的元素，集合中有两个相同的value也是OK的
+        hashMap.put("m","Java");
+        System.out.println(hashMap);
+        System.out.println(hashMap.containsKey("a"));
+        hashMap.containsKey("Java");
+
+//      取出集合中的key元素
+        Set set = hashMap.keySet();
+        Iterator iterator = set.iterator();
+        while (iterator.hasNext()){
+            System.out.println(iterator.next());
+        }
+        System.out.println("======================");
+
+//      取出集合中的value元素
+        Collection values = hashMap.values();
+        Iterator iterator1 = values.iterator();
+        while (iterator1.hasNext()){
+            System.out.println(iterator1.next());
+        }
+        System.out.println("======================");
+
+//      按key=value的姓氏取出集合中的元素
+        Set set1 = hashMap.entrySet();
+        Iterator iterator2 = set1.iterator();
+        while (iterator2.hasNext()){
+            System.out.println(iterator2.next());
+        }
+    }
+}
+```
+
+Hashtable 常用方法
+
+```java
+import java.util.*;
+
+public class Test {
+    public static void main(String[] args) {
+        Hashtable hashtable = new Hashtable();
+        hashtable.put("h", "Hello");
+        hashtable.put("w", "World");
+        hashtable.put("j", "Java");
+        hashtable.put("s", "JavaSE");
+        hashtable.put("m", "JavaME");
+        hashtable.put("e", "JavaEE");
+        System.out.println(hashtable);
+        hashtable.remove("e");
+        System.out.println(hashtable);
+        hashtable.put("m", "Model");
+        System.out.println(hashtable);
+        System.out.println(hashtable.containsKey("a"));
+        System.out.println(hashtable.containsValue("Java"));
+        Set set = hashtable.keySet();
+        Iterator iterator = set.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
+        Collection values = hashtable.values();
+        Iterator iterator1 = values.iterator();
+        while (iterator1.hasNext()) {
+            System.out.println(iterator1.next());
+        }
+    }
+}
+```
+
+Hashtable 是线程安全的，HashMap 是线程不安全的，
+也就是多个线程操作数据的时候，使用 Hashtable，数据不会出现错误的情况，因为 hashtable 的方法有 synchronized 关键字，也就是上了锁，因此是线程安全的集合类型
+使用 HashMap 时，线程不安全的，因为 hashMap 的方法没有 synchronized 关键字，也就是没有拿到锁，因此是线程不安全的集合类型
