@@ -1,3 +1,5 @@
+# 第 1 课
+
 # Java 概述
 
 Java 是 IT 研发类招聘需求量最大的语言之一
@@ -113,6 +115,8 @@ java Test
 变量就是为了解决内存地址很难记忆的问题
 
 相当于给内存地址起了一个别名，取数据的时候直接通过变量名取即可，不需要再通过内存地址来取数据了
+
+# 第 2 课
 
 # 变量
 
@@ -312,6 +316,7 @@ public class Test{
 抽象类，调用父类构造器，但不会创建对象。
 有创建对象的时候，一定会调用构造器，但是调用构造器时，不一定会创建对象。（类似数据库里面的触发trigger）
 
+
 # 运算符
 
 算术运算符 + - * /（加减乘除）
@@ -356,6 +361,8 @@ public class Test {
     }
 }
 ````
+
+# 第 3 课
 
 # 运算符
 
@@ -580,6 +587,8 @@ public class Test {
     }
 }
 ```
+
+# 第 4 课
 
 # 数组
 
@@ -868,6 +877,8 @@ public class Test {
 }
 ```
 
+# 第 5 课
+
 # Java 面向对象
 
 面向对象是一种编程思想
@@ -1077,6 +1088,8 @@ public class Student {
 
 成员变量有默认值，也就是说，在没有进行赋值操作的情况下会有一个默认初始值。
 局部变量没有默认值，
+
+# 第 6 课
 
 # 封装
 
@@ -1342,6 +1355,8 @@ public class Test {
 | 重写 | 父子类   | 相同   | 相同     | 相同或是其子类 | 不能小于父类 |
 | 重载 | 同一个类 | 相同   | 不同     | 没有要求       | 没有要求     |
 `````
+
+# 第 7 课
 
 # 1 多态
 
@@ -1673,6 +1688,8 @@ public class Test {
 | public native int hashCode()      | 返回对象的散列码                       |
 | public native int hashCode()      | 返回对象的散列码                       |
 
+# 第 8 课
+
 # Object 方法重写
 
 ## toString
@@ -1882,6 +1899,8 @@ public class Test {
     }
 }
 ```
+
+# 第 9 课
 
 # 异常
 
@@ -2271,6 +2290,8 @@ public class Test {
     }
 }
 ```
+
+# 第 10 课
 
 # 多线程
 
@@ -2692,6 +2713,8 @@ public class Test {
 ```
 
 在 lambda 表达式里面的 sleep()方法 是定义在 Thread 类中的，所以必须通过类.方法名()的方式去调用。
+
+# 第 11 课
 
 # 多线程
 
@@ -3234,6 +3257,8 @@ public class SynchronizedTest {
 
 包装类常量池有一个可用范围：-128~127，在此区间内常量池可用，同一个数值可以给多个线程使用；一旦超出这个范围，则常量池失效，此时就需要单独在堆中创建对应的数据，因此不是一个对象而是多个对象
 
+# 第 12 课
+
 # 多线程
 
 ## 线程安全的单例模式
@@ -3644,6 +3669,8 @@ public class Test {
     }
 }
 ```
+
+# 第 13 课
 
 # 多线程
 
@@ -4069,6 +4096,8 @@ public boolean add(E e) {
 
 可以对 CopyOnWrite 容器进行并发的读，而不需要加锁，因为当前容器不会添加任何元素，添加元素都是针对复制出来的新集合进行操作，所以 CopyOnWrite 容器也是一种读写分离的思想，读和写操作的是不同的容器。在对数据库进行操作的时候经常使用。
 
+# 第 14 课
+
 # JUC 并发编程工具包
 
 JUC 常用工具类
@@ -4410,6 +4439,8 @@ public class Test {
 }
 ```
 
+# 第 15 课
+
 # JUC
 
 ## ForkJoin 框架
@@ -4657,6 +4688,8 @@ public class Test3 {
 | SortedMap    | Map 的子接口，可以对集合中的键值元素进行排序                                           |
 | Queue        | 队列接口，此接口的实现类可以实现队列操作                                               |
 | Map.Entry    | Map 的内部接口，描述 Map 中的一个键值对元素                                            |
+
+# 第 16 课
 
 # 集合
 
@@ -5247,6 +5280,8 @@ Hashtable 是线程安全的，HashMap 是线程不安全的，
 也就是多个线程操作数据的时候，使用 Hashtable，数据不会出现错误的情况，因为 hashtable 的方法有 synchronized 关键字，也就是上了锁，因此是线程安全的集合类型
 使用 HashMap 时，线程不安全的，因为 hashMap 的方法没有 synchronized 关键字，也就是没有拿到锁，因此是线程不安全的集合类型
 
+# 第 17 课
+
 # Collections 工具类
 
 Collections 工具类专门用来操作集合的，添加元素、对元素进行排序、替换元素
@@ -5622,4 +5657,921 @@ public class Test {
 
 ---
 
-第 18 课
+# 第 18 课
+
+# 日期类
+
+## Date
+
+若只是单纯的显示/表示系统日期，用 date
+| 标记 | 描述 |
+| ---- | -------------------------------------------- |
+| y | 年，yyyy 表示 4 位数的年份信息 |
+| M | 月，MM 表示 2 位数的月份信息 |
+| m | 分钟，mm 表示 2 位数的分钟信息 |
+| d | 天，dd 表示 2 位数的天信息 |
+| H | 小时，HH 表示 2 位数的 24 小时制下的小时信息 |
+| h | 小时，hh 表示 2 位数的 12 小时制下的小时信息 |
+| s | 秒，ss 表示 2 位数的秒信息 |
+
+```java
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class Test {
+    public static void main(String[] args) {
+        Date date = new Date();
+        System.out.println(date);
+        //2024-01-01 20:00:00
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = dateFormat.format(date);
+        System.out.println(format);
+    }
+
+}
+```
+
+## Calendar
+
+若需要对日期进行计算，如 3 天后 7 天后·是几月几号等等，推荐使用 calendar。使用场景：图书馆借还书，付费会员等等。
+调用方法：输入原生数据，然后对数据进行加工，然后对加工后的数据进行输出。
+年月日等设为 静态 final 常量，常量的变量名一半全大写。
+
+| 常量                                 | 描述                             |
+| ------------------------------------ | -------------------------------- |
+| public static final int YEAR         | 年，常量，常量的变量名一半全大写 |
+| public static final int MONTH        | 月                               |
+| public static final int DAY_OF_MONTH | 天，以月为单位                   |
+| public static final int DAY_OF_YEAR  | 天，以年为单位                   |
+| public static final int HOUR_OF_DAY  | 小时                             |
+| public static final int MINUTE       | 分钟                             |
+| public static final int SECOND       | 秒                               |
+| public static final int MILLISECOND  | 毫秒                             |
+
+| 方法                                 | 描述                                                        |
+| ------------------------------------ | ----------------------------------------------------------- |
+| public static Calendar getInstance() | 获取系统对应的 Calendar 实例化对象                          |
+| public void set(int field,int value) | 给静态常量赋值,第一个参数是常量，第二个参数是要赋值的数值。 |
+| public int get(int field)            | 取出静态常量                                                |
+| public final Date getTime()          | 获取 Calendar 对应的 Date 对象                              |
+
+```java
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class Test {
+    public static void main(String[] args) {
+//        1.拿到calendar对象
+        Calendar calendar = Calendar.getInstance();
+//        2.给常量赋值
+        calendar.set(Calendar.YEAR, 2024);
+        calendar.set(Calendar.MONTH, 10);//月份从0开始算，也就是说5月的话，数字是4
+        calendar.set(Calendar.DAY_OF_MONTH, 17);
+//        3.通过.get(想要的结果对应的常量)对2.中输入的数据进行运算。
+        int i = calendar.get(Calendar.WEEK_OF_MONTH);
+        System.out.println(i);
+
+//        计算今天开始300天后是哪天2？
+//        1.先获取今天在一年中是第几天
+        int i1 = calendar.get(Calendar.DAY_OF_YEAR);
+//        2.给今天的日期加上300
+        calendar.add(Calendar.DAY_OF_YEAR, 300);
+//        3.获取时间
+        Date time = calendar.getTime();
+//        4.指定输出的时间格式
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        5.对计算后的时间进行格式转换
+        String format = simpleDateFormat.format(time);
+        System.out.println(format);
+    }
+}
+```
+
+# IO 流
+
+Input 输入--文件上传，如微信头像等，
+Output 输出--下载任何内容都是输出。
+输入输出其实就是两台终端(用户电脑，服务器)之间的数据传递。
+
+## File 类
+
+| 方法                               | 描述                           |
+| ---------------------------------- | ------------------------------ |
+| public File(String path)           | 构造器————根据路径创建文件对象 |
+| public String getName()            | 获取文件名                     |
+| public String getParent()          | 获取文件所在的目录             |
+| public File getParentFile()        | 获取文件所在的目录对应的对象   |
+| public String getPath()            | 获取文件路径                   |
+| public boolean exists()            | 判断对象是否存在               |
+| public boolean isDirectory()       | 判断对象是否为目录即文件夹     |
+| public boolean isFile()            | 判断对象是否为文件而非目录     |
+| public long length()               | 获取文件的大小                 |
+| public boolean createNewFile()     | 根据当前对象创建文件           |
+| public boolean delete()            | 删除对象                       |
+| public boolean mkdir()             | 创建文件夹                     |
+| public boolean renameTo(File file) | 为已存在的文件重命名           |
+
+```java
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class Test {
+    public static void main(String[] args) {
+//        File file = new File("D:\\java\\test.txt");
+//        if (file.exists()) {
+//            System.out.println(file + "存在");
+//            System.out.println(file.getName());
+//            System.out.println(file.getPath());
+//            System.out.println(file.isFile());
+//            File file1 = new File(file.getParent());
+//            System.out.println(file1.isDirectory());
+//            long length = file.length();
+//            System.out.println(length);
+//        } else {
+//            System.out.println(file + "不存在，自动创建");
+//            try {
+//                file.createNewFile();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+        File file = new File("D:\\java\\test2.txt");
+        if(file.exists()){
+            boolean delete = file.delete();
+            if(delete){
+                System.out.println("删除成功");
+            } else {
+                System.out.println("删除失败");
+            }
+        }
+    }
+}
+```
+
+## 字节流
+
+- 按照方向分，输入流和输出流
+- 按照单位分，字节流和字符流，字节流指每次处理的数据是以字节为单位，字符流指每次处理数据以字符为单位
+
+输入字节流和输出字节流
+
+输入字节流 InputStream
+
+| 方法                                          | 描述                                         |
+| --------------------------------------------- | -------------------------------------------- |
+| public int read()                             | 以字节为单位读取数据                         |
+| public int read(byte[] bytes)                 | 将数据存入 byte 数组，返回数据长度           |
+| public int read(byte[] bytes,int off,int len) | 将数据存入 byte 数组的指定区间，返回数据长度 |
+| public int available()                        | 返回当前数据流中未读取的数据个数             |
+| public void close()                           | 关闭数据流                                   |
+
+传统的比较笨重的读取字节的方式：
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+//        指定要读取的文件
+        InputStream inputStream = new FileInputStream("d:\\java\\test.txt");
+//        每次只读取一个字节
+        int read = inputStream.read();
+//        输出读取的字节对应的ASC码
+        System.out.println(read);
+//        读取第二个字节
+        int read1 = inputStream.read();
+        System.out.println(read1);
+//        读取第三个字节
+        int read2 = inputStream.read();
+        System.out.println(read2);
+//        读取第三个字节
+        int read3 = inputStream.read();
+        System.out.println(read3);
+//        读取第四个字节
+        int read4 = inputStream.read();
+        System.out.println(read4);
+
+    }
+}
+
+```
+
+发现规律，就是读取字节的方式方法都是相同的，无非是每次读取的字节是不同的，读取字节的次数就等于字节流的长度。
+因此，比较适合使用循环去读取字节流了。
+
+升级版：
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+//        指定要读取的文件
+        InputStream inputStream = new FileInputStream("d:\\java\\test.txt");
+        File file = new File("d:\\java\\test.txt");
+        long length = file.length();
+        for (long i = 0; i < length; i++) {
+            int read = inputStream.read();
+            System.out.println(read);
+        }
+        int read = inputStream.read();
+        System.out.println(read);//这一步结果为-1，因为字节已经读完了，没有了，结果就是-1.
+    }
+}
+```
+
+```java
+//读取了两次数据的有漏洞的代码
+public class Test {
+    public static void main(String[] args) throws Exception{
+//        指定要读取的文件
+        InputStream inputStream = new FileInputStream("d:\\java\\test.txt");
+        File file = new File("d:\\java\\test.txt");
+        long length = file.length();
+        for (long i = 0; i < length; i++) {
+            int read = inputStream.read();
+            System.out.println(read);
+        }
+        System.out.println("******************************************");
+        inputStream = new FileInputStream("d:\\java\\test.txt");
+        while (inputStream.read() != -1){//第一次读取
+            int read = inputStream.read();//第二次读取
+            System.out.println(read);
+        }
+    }
+}
+```
+
+```java
+// 针对有漏洞版本的升级版，用一个变量接受读取的内容
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        InputStream inputStream = new FileInputStream("D:\\java\\test.txt");
+        byte[] bytes = new byte[10];
+        int length = inputStream.read(bytes,2,3);
+        System.out.println(length);
+        for (byte aByte : bytes) {
+            System.out.println(aByte);
+        }
+        int temp = 0;
+        while ((temp = inputStream.read()) != -1){
+            System.out.println(temp);
+        }
+    }
+}
+```
+
+实际开发中，更推荐使用 while 循环写读取的过程。
+
+因为，for 循环首先需要创建 file 对象，然后还要获取 file 对象文件的长度，最后才执行读取；
+而 while 循环则不需要创建对象，也无需获取对象的长度，而是直接读取文件即可。
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+//        指定要读取的文件
+        InputStream inputStream = new FileInputStream("d:\\java\\test.txt");
+        byte[] bytes = new byte[3];
+        //获取数据的长度
+        int len = inputStream.read(bytes);
+        //虽然文件的长度是6，但是由于指定读取的数据长度bytes的长度是3，因此只读取到3位的数据。
+        System.out.println(len);
+    }
+}
+```
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+//        指定要读取的文件
+        InputStream inputStream = new FileInputStream("d:\\java\\test.txt");
+        byte[] bytes = new byte[10];
+        //获取数据的长度
+        int len = inputStream.read(bytes);
+        System.out.println(len);
+        for (byte aByte : bytes) {
+            System.out.println(aByte);
+        }
+//        while ((len = inputStream.read(bytes)) != -1){
+//            System.out.println(new String(bytes,0,len));
+//        }
+    }
+}
+```
+
+byte 型数据的默认值就是 0
+读取的结果是：
+97
+98
+99
+100
+101
+102
+0
+0
+0
+0
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+//        指定要读取的文件
+        InputStream inputStream = new FileInputStream("d:\\java\\test.txt");
+        byte[] bytes = new byte[10];
+        //获取数据的长度
+        int len = inputStream.read(bytes, 2, 3);//从第二位开始，中间存储长度为3的数据
+        System.out.println(len);
+        for (byte aByte : bytes) {
+            System.out.println(aByte);
+        }
+    }
+}
+```
+
+输出的结果是：
+6 //数据长度
+0 //前两位默认值 0
+0 //前两位默认值 0
+97
+98
+99
+0 //默认值 0
+0 //默认值 0
+0 //默认值 0
+0 //默认值 0
+0 //默认值 0
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception {
+        InputStream inputStream = new FileInputStream("D:\\java\\test.txt");
+        int temp = 0;
+        System.out.println(inputStream.available());
+        while ((temp = inputStream.read()) != -1){
+            System.out.println(temp);
+            // inputStream.available()返回当前数据流中未读取的数据个数
+            System.out.println(inputStream.available());
+            inputStream.close();//关闭数据流
+        }
+    }
+}
+
+```
+
+输出字节流 OutputStream
+
+| 方法                                        | 描述                             |
+| ------------------------------------------- | -------------------------------- |
+| public void write(int b)                    | 以字节为单位写数据               |
+| public void write(byte[] b)                 | 将 byte 数组中的数据写出         |
+| public void write(byte[] b,int off,int len) | 将 byte 数组中指定区间的数据写出 |
+| public void close()                         | 关闭数据流                       |
+
+```java
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+    //对于不存在的文件，程序会自动帮忙创建该文件。
+        OutputStream outputStream = new FileOutputStream("D:\\java\\test2.txt");
+//        outputStream.write(98);　//把数字1对应的ASC码给写进去
+        byte[] bytes = {97,98,99,100,101,102};　//将 byte 数组中指定区间的数据写出
+        outputStream.write(bytes,2,3);
+        outputStream.close();
+    }
+}
+```
+
+## 文件复制
+
+程序先读取已存的文件即 input，再重新输出一份新的文件即 output 就实现了文件的复制。
+
+第一种方式：
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception {
+        InputStream inputStream = new FileInputStream("D:\\java\\test.txt");
+        OutputStream outputStream = new FileOutputStream("D:\\java\\copy.txt");
+        int temp = 0;
+        while ((temp = inputStream.read()) != -1) {
+            outputStream.write(temp);
+        }
+        inputStream.close();
+        outputStream.close();
+    }
+}
+
+```
+
+第二种方式：已知文件的数据长度
+
+```java
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        InputStream inputStream = new FileInputStream("D:\\java\\test.txt");
+        OutputStream outputStream = new FileOutputStream("D:\\java\\copy.txt");
+        byte[] bytes = new byte[10];
+        inputStream.read(bytes);
+        outputStream.write(bytes);
+        inputStream.close();
+        outputStream.close();
+    }
+}
+```
+
+\*\*\*\*推荐第三种方式：不知道文件的数据长度，但可以避免资源的浪费，而且效率更高
+
+```java
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        InputStream inputStream = new FileInputStream("D:\\java\\test.txt");
+        OutputStream outputStream = new FileOutputStream("D:\\java\\copy.txt");
+        byte[] bytes = new byte[1024];
+        int length = inputStream.read(bytes);
+        outputStream.write(bytes,0,length);
+        inputStream.close();
+        outputStream.close();
+    }
+}
+```
+
+# 第 19 课
+
+# 字符流
+
+字节流以字节为单位进行数据的 ASC 码的输入和输出
+
+字符流以字符为单位进行数据的 ASC 码的输入和输出
+
+输入字符流 Reader
+
+| 方法                                          | 描述                                         |
+| --------------------------------------------- | -------------------------------------------- |
+| public int read()                             | 以字符为单位读取数据                         |
+| public int read(char[] chars)                 | 将数据读入 char 数组，并返回数据长度         |
+| public int read(char[] chars,int off,int len) | 将数据读入 char 数组指定区间，并返回数据长度 |
+| public void close()                           | 关闭数据流                                   |
+
+当被读取的内容是英文或数字、符合，字节流和字符流输出的结果一致，为什么？
+
+英文一个字符就是一个字节
+
+汉字一个字符是 3 个字节
+
+```java
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.Reader;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        Reader reader = new FileReader("D:\\java\\test.txt");
+        int temp = 0;
+        while ((temp = reader.read()) != -1){
+            System.out.println(temp);
+        }
+        reader.close();
+        System.out.println("******************************");
+        InputStream inputStream = new FileInputStream("D:\\java\\test.txt");
+        int temp1 = 0;
+        while ((temp1 = inputStream.read()) != -1){
+            System.out.println(temp1);
+        }
+        inputStream.close();
+    }
+}
+```
+
+文档内容：你好世界
+输出结果：
+22909
+19990
+30028
+
+---
+
+228
+189
+160
+229
+165
+189
+228
+184
+150
+231
+149
+140
+
+```java
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.Reader;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        Reader reader = new FileReader("D:\\java\\test.txt");
+        char[] chars = new char[1024];//最终输出的结果是文件的内容加上1024的剩余长度的空白内容，会造成资源的浪费
+        int length = reader.read(chars);
+        for (char aChar : chars) {
+            System.out.println(aChar);
+        }
+        reader.close();
+    }
+}
+```
+
+\*\*\* 推荐使用下面的方法：
+
+```java
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.Reader;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        Reader reader = new FileReader("D:\\java\\test.txt");
+        char[] chars = new char[1024];
+        int length = reader.read(chars,0,4);//已知字符长度是4
+        for (char aChar : chars) {
+            System.out.println(aChar);
+        }
+        reader.close();
+    }
+}
+```
+
+输出字符流 Writer
+
+| 方法                                            | 描述                             |
+| ----------------------------------------------- | -------------------------------- |
+| public void write(int c)                        | 以字符为单位写数据               |
+| public void write(char[] chars)                 | 将 char 数组中的数据写出         |
+| public void write(char[] chars,int off,int len) | 将 char 数组指定区间的数据写出   |
+| public void write(String str)                   | 将 String 类型的数据写出         |
+| public void write(String str,int off,int len)   | 将 String 类型指定区间的数据写出 |
+| public void close()                             | 关闭数据流                       |
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+        // 确认：你 的ASC码
+//        Reader reader = new FileReader("D:\\java\\test.txt");
+//        int read = reader.read();
+//        System.out.println(read);
+// 创建新文件并写入新文件
+        Writer writer = new FileWriter("D:\\java\\test2.txt");
+        writer.write(20320);
+        writer.close();
+    }
+}
+```
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+        Writer writer = new FileWriter("D:\\java\\test2.txt");
+        char[] chars = {'你','好','世','界'};
+        writer.write(chars);
+        writer.close();
+    }
+}
+```
+
+输出结果：你好世界
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+        Writer writer = new FileWriter("D:\\java\\test2.txt");
+        char[] chars = {'你','好','世','界'};
+        writer.write(chars, 1, 1);//从第一个字符开始写入，写入的字符长度为1
+        writer.close();
+    }
+}
+```
+
+输出结果：你
+
+```java
+import java.io.*;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        Writer writer = new FileWriter("D:\\java\\test2.txt");
+        String str = "你好世界";
+        writer.write(str,1,1); //从第一个字符开始写入，写入的字符长度为1
+        writer.close();
+    }
+}
+```
+
+字节流图片复制和字符流图片复制
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+    //如果都是英文的话，效率相同，如果不是英文的文字内容的话，字符流形式的效率比较高。因为一个字符是3个字节。
+        //字节流复制
+        InputStream inputStream = new FileInputStream("D:\\java\\test.txt");
+        OutputStream outputStream = new FileOutputStream("D:\\java\\copy.txt");
+        int temp = 0;
+        while ((temp = inputStream.read()) != -1){
+            outputStream.write(temp);
+        }
+        inputStream.close();
+        outputStream.close();
+
+        //字符流复制
+        Reader reader = new FileReader("D:\\java\\test.txt");
+        Writer writer = new FileWriter("D:\\java\\copy2.txt");
+        int temp1 = 0;
+        while ((temp1 = reader.read()) != -1){
+            writer.write(temp1);
+        }
+//        writer.flush();  关闭之前清一下缓存应该会更好
+        reader.close();
+        writer.close();
+    }
+}
+
+```
+
+```java
+import java.io.*;
+// 实际开发中，更多的是使用图片形式的文件上传，此时需要使用字节流进行处理。
+public class Test {
+    public static void main(String[] args) throws Exception {
+        //字节流复制图片OK
+        InputStream inputStream = new FileInputStream("D:\\java\\123.png");
+        OutputStream outputStream = new FileOutputStream("D:\\java\\copy.png");
+        int temp = 0;
+        while ((temp = inputStream.read())!=-1){
+            outputStream.write(temp);
+        }
+        inputStream.close();
+        outputStream.close();
+        //字符流复制图片的结果并不理想，虽然复制的目标文件存在，但是图片内容不正确。因为图片内容并不是字符单位，图片被拆分成最小的字节单位才能被复制。
+        Reader reader = new FileReader("D:\\java\\123.png");
+        Writer writer = new FileWriter("D:\\java\\copy2.png");
+        int temp1 = 0;
+        while ((temp1 = reader.read()) != -1){
+            writer.write(temp1);
+        }
+//        writer.flush();  关闭之前清一下缓存应该会更好
+        reader.close();
+        writer.close();
+    }
+}
+```
+
+## 序列化和反序列化
+
+如果把一个 Java 对象存入文件中，则需要对该对象进行序列化处理
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+        User user = new User(1, "张三");
+        OutputStream outputStream = new FileOutputStream("D:\\java\\test.txt");
+        byte[] bytes = user.toString().getBytes();
+        outputStream.write(bytes);
+        outputStream.close();
+
+    }
+}
+```
+
+<!-- 上面的代码写进来的内容是： User{id=1, name='张三'}   其实写进来的并不是一个对象，而是字符。
+因为代码是先把user对象通过toString()转成字符串，再通过getBytes()转成byte数组。
+因此写入的并不是一个user对象本身，而是一个byte数组，这个数组是用来描述这个user对象的。-->
+
+<!-- 对上面输出的内容进行验证 -->
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+//        User user = new User(1, "张三");
+//        OutputStream outputStream = new FileOutputStream("D:\\java\\test.txt");
+//        byte[] bytes = user.toString().getBytes();
+//        outputStream.write(bytes);
+//        outputStream.close();
+        InputStream inputStream = new FileInputStream("D:\\java\\test.txt");
+        byte[] bytes = new byte[1024];
+        int length = inputStream.read(bytes);
+        String str = new String(bytes, 0, length);
+        System.out.println(str);
+        // 输出的内容是：User{id=1, name='张三'}
+
+        // 但是如果用User直接强转的话，强转不了。
+        User user = (User) str; //这一步就会出现编译错误
+    }
+}
+```
+
+因此，
+如果把一个 Java 对象存入文件中，则需要对该对象进行序列化处理。
+如何进行序列化处理： 对象类 implements Serializable 即可。
+
+```java
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private Integer id;
+    private String name;
+
+    public User(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+}
+```
+
+<!-- 序列化：把对象写入文件里的过程 -->
+
+```java
+import java.io.*;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+// 序列化
+        User user = new User(1, "张三");
+        OutputStream outputStream = new FileOutputStream("D:\\java\\test.txt");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        objectOutputStream.writeObject(user);
+        objectOutputStream.close();
+        outputStream.close();
+    }
+}
+```
+
+<!-- 反序列化：从文件中读取对象的过程 -->
+
+```java
+import java.io.*;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+    // 序列化
+        // User user = new User(1, "张三");
+        // OutputStream outputStream = new FileOutputStream("D:\\java\\test.txt");
+        // ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        // objectOutputStream.writeObject(user);
+        // objectOutputStream.close();
+        // outputStream.close();
+// 注意：*****序列化后的文件内容一旦做出任何修改，都无法进行反序列化了，因为会被认为是不同的对象。不能被还原。
+    //  反序列化
+        //拿到目标文件
+        InputStream inputStream = new FileInputStream("D:\\java\\test.txt");
+        //对象字节流输入
+        ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+        //对象强转成user
+        User user = (User) objectInputStream.readObject();
+        System.out.println(user);
+
+    }
+}
+```
+
+# 反射
+
+通过一个实例化对象映射到类，在程序运行期间就可以获取类的信息，进行相关操作。
+
+## Class 类
+
+Class 类是反射的基础
+
+用一个对象来表示某个类的信息，通过 Class 类来创建
+
+Class 是专门用来描述其他类的类，每一个 Class 对象都是对某个类的具体描述
+
+1、调用 forName 方法
+
+2、通过目标类的类字面量获取
+
+3、通过目标类的实例化对象获取
+
+```java
+package test;
+
+import java.io.*;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        //forName
+        Class clazz1 = Class.forName("test.User");
+        System.out.println(clazz1);
+        //类字面量
+        Class clazz2 = User.class;
+        System.out.println(clazz2);
+        //实例化对象
+        User user = new User(1, "张三");
+        Class clazz3 = user.getClass();
+        System.out.println(clazz3);
+        System.out.println(clazz1 == clazz2);
+        System.out.println(clazz2 == clazz3);
+    }
+}
+```
+
+上述 3 种方式获取的 Class 对象都是同一个，因为每个类在内存中只有一份，对应的对象也就只有一份，不是由它创建出来的实例化对象，而是描述它内部结构的对象
+
+| 方法                                                       | 描述                                                       |
+| ---------------------------------------------------------- | ---------------------------------------------------------- |
+| public boolean isInterface()                               | 判断类是否为接口                                           |
+| public boolean isArray()                                   | 判断类是否为数组                                           |
+| public boolean isAnnotation()                              | 判断类是否为注解                                           |
+| public String getName()                                    | 获取类名                                                   |
+| public ClassLoader getClassLoader()                        | 获取类加载器                                               |
+| public Class getSuperclass()                               | 获取类的父类                                               |
+| public Package getPackage()                                | 获取类所在的包                                             |
+| public String getPackage().getName()                       | 获取类所在的包名                                           |
+| public Class[] getInterfaces()                             | 获取类的接口                                               |
+| public int getModifiers()                                  | 获取类的访问权限修饰符                                     |
+| public Field[] getFields()                                 | 获取类的全部公有成员变量，包括继承父类和自定义的           |
+| public Field[] getDeclaredFields()                         | 获取类的自定义成员变量                                     |
+| public Field getField(String name)                         | 通过名称获取类的成员变量，包括继承父类和自定义的           |
+| public Field getDeclaredField(String name)                 | 通过名称获取类的自定义成员变量                             |
+| public Method[] getMethods()                               | 获取类的全部公有方法，包括继承父类和自定义的               |
+| public Method[] getDeclaredMethods()                       | 获取类的自定义方法                                         |
+| public Method getMethod(String name,Class... pars)         | 通过名称和参数信息获取类的公有方法，包括继承父类和自定义的 |
+| public Method getDeclaredMethod(String name,Class... pars) | 通过名称和参数获取类的自定义方法                           |
+| public Constructor[] getConstructors()                     | 获取类的全部公有构造器                                     |
+| public Constructor[] getDeclaredConsturctors()             | 获取类的全部构造器                                         |
+| public Constructor getConstructor(Class... pars)           | 通过参数信息获取类的公有构造器                             |
+| public Constructor getDeclaredConstructor(Class... pars)   | 通过参数信息获取类的构造器                                 |
+
+```java
+package test;
+
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        //forName
+        Class clazz1 = Class.forName("test.User");
+        Field[] fields = clazz1.getFields();
+        for (Field field : fields) {
+            System.out.println(field);
+        }
+
+        Field[] declaredFields = clazz1.getDeclaredFields();
+        for (Field declaredField : declaredFields) {
+            System.out.println(declaredField);
+        }
+
+        Field id = clazz1.getField("id");
+        System.out.println(id);
+
+        Field id1 = clazz1.getDeclaredField("num");
+        System.out.println(id1);
+
+        Method[] methods = clazz1.getDeclaredMethods();
+        for (Method method : methods) {
+            System.out.println(method);
+        }
+
+        Method test = clazz1.getDeclaredMethod("test", int.class);
+        System.out.println(test);
+
+        Constructor[] constructors = clazz1.getConstructors();
+        for (Constructor constructor : constructors) {
+            System.out.println(constructor);
+        }
+
+        Constructor constructor = clazz1.getConstructor(String.class);
+        System.out.println(constructor);
+
+    }
+}
+```
