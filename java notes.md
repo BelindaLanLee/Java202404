@@ -6462,21 +6462,26 @@ public class Test {
 
 # 反射
 
-通过一个实例化对象映射到类，在程序运行期间就可以获取类的信息，进行相关操作。
+即反向操作。是通过一个虚像映射到一个实物，这样就可以获取到实物的某些特征了。
+
+通过一个实例化对象映射到类，在程序运行期间就可以获取类的信息/结构，进行相关操作，完成某些过程。
+一般情况下，我们通过类获取对象的实例化信息，反射就是这一过程的反向/反转过程，是通过实例化对象获取类的信息的。
 
 ## Class 类
 
-Class 类是反射的基础
+Class 类是反射的基础，即反射的源头。
 
-用一个对象来表示某个类的信息，通过 Class 类来创建
+用一个对象来表示某个类的信息，通过 Class 类来创建。
 
-Class 是专门用来描述其他类的类，每一个 Class 对象都是对某个类的具体描述
+Class 类 是专门用来描述其他类的类，或者说每一个 Class 对象都是对某个类的具体描述。
+如何创建 class 对象：
 
-1、调用 forName 方法
+方法 1、调用 forName(类名) 静态方法 eg. Class clazz1 = Class.forName("User");
+如果文件放在了包里面，那么，在.forname()中则需要写上带包名的全类名，如：.forName("test.User");
 
-2、通过目标类的类字面量获取
+方法 2、通过目标类的 class 即类字面量 获取，如：User.class;
 
-3、通过目标类的实例化对象获取
+方法 3、通过目标类的实例化对象获取。 如：User user = new User(1, "Linda");
 
 ```java
 package test;
@@ -6485,13 +6490,13 @@ import java.io.*;
 
 public class Test {
     public static void main(String[] args) throws Exception {
-        //forName
+        //方法1：通过forname()静态方法来调用类
         Class clazz1 = Class.forName("test.User");
         System.out.println(clazz1);
-        //类字面量
+        //方法2：通过类字面量
         Class clazz2 = User.class;
         System.out.println(clazz2);
-        //实例化对象
+        //方法3：通过实例化对象来获取
         User user = new User(1, "张三");
         Class clazz3 = user.getClass();
         System.out.println(clazz3);
@@ -6501,32 +6506,88 @@ public class Test {
 }
 ```
 
-上述 3 种方式获取的 Class 对象都是同一个，因为每个类在内存中只有一份，对应的对象也就只有一份，不是由它创建出来的实例化对象，而是描述它内部结构的对象
+上述 3 种方式获取的 Class 对象都是同一个，因为每个类在内存中只有一份，对应的对象也就只有一份，不是由它创建出来的实例化对象，而是描述它内部结构的对象。
+因为类只有一个也就是 User 类只有一个，并不是指的由 User 类创建的实例化对象。
 
-| 方法                                                       | 描述                                                       |
-| ---------------------------------------------------------- | ---------------------------------------------------------- |
-| public boolean isInterface()                               | 判断类是否为接口                                           |
-| public boolean isArray()                                   | 判断类是否为数组                                           |
-| public boolean isAnnotation()                              | 判断类是否为注解                                           |
-| public String getName()                                    | 获取类名                                                   |
-| public ClassLoader getClassLoader()                        | 获取类加载器                                               |
-| public Class getSuperclass()                               | 获取类的父类                                               |
-| public Package getPackage()                                | 获取类所在的包                                             |
-| public String getPackage().getName()                       | 获取类所在的包名                                           |
-| public Class[] getInterfaces()                             | 获取类的接口                                               |
-| public int getModifiers()                                  | 获取类的访问权限修饰符                                     |
-| public Field[] getFields()                                 | 获取类的全部公有成员变量，包括继承父类和自定义的           |
-| public Field[] getDeclaredFields()                         | 获取类的自定义成员变量                                     |
-| public Field getField(String name)                         | 通过名称获取类的成员变量，包括继承父类和自定义的           |
-| public Field getDeclaredField(String name)                 | 通过名称获取类的自定义成员变量                             |
-| public Method[] getMethods()                               | 获取类的全部公有方法，包括继承父类和自定义的               |
-| public Method[] getDeclaredMethods()                       | 获取类的自定义方法                                         |
-| public Method getMethod(String name,Class... pars)         | 通过名称和参数信息获取类的公有方法，包括继承父类和自定义的 |
-| public Method getDeclaredMethod(String name,Class... pars) | 通过名称和参数获取类的自定义方法                           |
-| public Constructor[] getConstructors()                     | 获取类的全部公有构造器                                     |
-| public Constructor[] getDeclaredConsturctors()             | 获取类的全部构造器                                         |
-| public Constructor getConstructor(Class... pars)           | 通过参数信息获取类的公有构造器                             |
-| public Constructor getDeclaredConstructor(Class... pars)   | 通过参数信息获取类的构造器                                 |
+拿到类的结构对象之后，就可以获取类的结构了。
+
+| 方法                                                       | 描述                                                                                 |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| public boolean isInterface()                               | 判断类是否为接口                                                                     |
+| public boolean isArray()                                   | 判断类是否为数组                                                                     |
+| public boolean isAnnotation()                              | 判断类是否为注解                                                                     |
+| public String getName()                                    | 获取类名                                                                             |
+| public ClassLoader getClassLoader()                        | 获取类加载器                                                                         |
+| public Class getSuperclass()                               | 获取类的父类                                                                         |
+| public Package getPackage()                                | 获取类所在的包                                                                       |
+| public String getPackage().getName()                       | 获取类所在的包名                                                                     |
+| public Class[] getInterfaces()                             | 获取类的接口                                                                         |
+| public int getModifiers()                                  | 获取类的访问权限修饰符                                                               |
+| public Field[] getFields()                                 | 获取类的全部公有成员变量，包括继承父类和自定义的，但必须是共有的即修饰符是 public 的 |
+| public Field[] getDeclaredFields()                         | 获取类的自定义成员变量,不管是共有的还是私有的都能拿到,不包括父类的                   |
+| public Field getField(String name)                         | 通过名称获取类的成员变量，包括继承父类和自定义的                                     |
+| public Field getDeclaredField(String name)                 | 通过名称获取类的自定义成员变量                                                       |
+| public Method[] getMethods()                               | 获取类的全部公有方法，包括继承父类和自定义的                                         |
+| public Method[] getDeclaredMethods()                       | 获取类的自定义方法                                                                   |
+| public Method getMethod(String name,Class... pars)         | 通过名称和参数信息获取类的公有方法，包括继承父类和自定义的                           |
+| public Method getDeclaredMethod(String name,Class... pars) | 通过名称和参数获取类的自定义方法                                                     |
+| public Constructor[] getConstructors()                     | 获取类的全部公有构造器                                                               |
+| public Constructor[] getDeclaredConsturctors()             | 获取类的全部构造器                                                                   |
+| public Constructor getConstructor(Class... pars)           | 通过参数信息获取类的公有构造器                                                       |
+| public Constructor getDeclaredConstructor(Class... pars)   | 通过参数信息获取类的构造器                                                           |
+
+<!-- 获取类的所有的外部信息 -->
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception {
+        //通过forname()静态方法来调用类
+        Class clazz1 = Class.forName("User");
+        boolean anInterface = clazz1.isInterface();
+        System.out.println(anInterface);
+
+        // 判断类是否为注解
+        boolean annotation = clazz1.isAnnotation();
+        System.out.println(annotation);
+
+
+        Class<Override> overrideClass = Override.class;
+        System.out.println(overrideClass.isAnnotation());
+        // 获取类名
+        String name = clazz1.getName();
+        System.out.println(name);
+
+        // 获取类加载器
+        ClassLoader classLoader = clazz1.getClassLoader();
+        System.out.println(clazz1);
+
+        // 获取类的父类
+        Class superclass = clazz1.getSuperclass();
+        System.out.println(superclass);
+
+        // 获取类所在的包
+        Package aPackage = clazz1.getPackage();
+        System.out.println(aPackage);
+
+        // 获取类所在的包名
+        String name1 = clazz1.getPackage().getName();
+        System.out.println(name1);
+
+        // 获取类的接口
+        Class[] interfaces = clazz1.getInterfaces();
+        System.out.println(interfaces);
+        for (Class aClass : interfaces) {
+            System.out.println(aClass);
+        }
+
+        // 获取类的访问权限修饰符
+        int modifiers = clazz1.getModifiers();
+        System.out.println(modifiers);
+    }
+}
+```
+
+<!-- 重点：获取类的内部信息，如属性，方法等 -->
 
 ```java
 package test;
@@ -6540,11 +6601,13 @@ public class Test {
     public static void main(String[] args) throws Exception {
         //forName
         Class clazz1 = Class.forName("test.User");
+        // 获取从共有的成员变量，包括自己的和从父类继承来的，只要是共有的，都会拿到
         Field[] fields = clazz1.getFields();
         for (Field field : fields) {
             System.out.println(field);
         }
 
+        // 获取类的自定义成员变量,不管是共有的还是私有的都能拿到,不包括父类的
         Field[] declaredFields = clazz1.getDeclaredFields();
         for (Field declaredField : declaredFields) {
             System.out.println(declaredField);
@@ -6572,6 +6635,685 @@ public class Test {
         Constructor constructor = clazz1.getConstructor(String.class);
         System.out.println(constructor);
 
+    }
+}
+```
+
+# 第 20 课
+
+# 反射的实际应用
+
+## 实际应用 1：反射调用方法
+
+<!-- 常规情况下，我们是通过创建对象，然后再调用对象的属性和方法来实现。 -->
+
+```java
+package test;
+
+public class Student {
+    private int id;
+    private String name;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void show(){
+        System.out.println("学生信息");
+        System.out.println("ID:" + this.id);
+        System.out.println("姓名:" + this.name);
+    }
+
+    public int test(int num,int num2){
+        return num+num2;
+    }
+}
+
+```
+
+<!-- 反射则是相反的处理，操作的不是对象,而是对象的方法本身。 -->
+<!-- 例 无参数的调用方法 -->
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+        Student student = new Student();
+        student.setId(1);
+        student.setName("张三");
+        student.show();
+
+        Class clazz = Student.class;
+        Method show = clazz.getMethod("show", null);
+        show.invoke(student, null);
+    }
+}
+```
+
+<!-- 例 调用有多个参数的方法 -->
+
+```java
+package Test;
+
+public class Student {
+    private int id;
+    private String name;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void show(){
+        System.out.println("学生信息");
+        System.out.println("id:"+this.id);
+        System.out.println("姓名:" + this.name);
+    }
+
+    public int test(int num, int num2){
+        return num + num2;
+    }
+}
+```
+
+```java
+package test;
+
+import java.lang.reflect.Method;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        Student student = new Student();
+        student.setId(1);
+        student.setName("张三");
+    //常规调用
+        student.show();
+    //反射调用
+        // 一、获取 Class 对象
+        Class clazz = Student.class;
+        // 二、获取类的成员信息（构造器、方法、字段）
+        // 三、创建对象实例
+        Method show = clazz.getMethod("show", null);
+        // 四、调用方法
+        show.invoke(student, null);
+        Method test = clazz.getMethod("test", int.class,int.class);
+        Object invoke = test.invoke(student, 1,2);
+        System.out.println(invoke);
+    }
+}
+```
+
+## 在程序运行过程中，通过反射访问成员变量
+
+```java
+package test;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        // 一、获取 Class 对象
+        Class clazz = Student.class;
+        // 二、获取 Class 的属性
+        Field[] declaredFields = clazz.getDeclaredFields();
+        // 三、对获取的属性进行遍历
+        for (Field declaredField : declaredFields) {
+            int modifiers = declaredField.getModifiers();
+            Class<?> fieldType = declaredField.getType();
+            String fieldName = declaredField.getName();
+            System.out.println("成员变量" + fieldName + "的数据类型是：" + fieldType.getName() + ",访问权限：" + getModifiers(modifiers));
+        }
+    }
+
+    public static String getModifiers(int modifiers){
+        String result = null;
+        switch (modifiers){
+            case 0:
+                result = "";
+                break;
+            case 1:
+                result = "public";
+                break;
+            case 2:
+                result = "private";
+                break;
+            case 3:
+                result = "protected";
+                break;
+        }
+        return result;
+    }
+}
+```
+
+## 通过反射获取它的对象
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+        Student student = new Student();//在下一段的代码中也可以通过反射的方式去创建
+        Class clazz = Student.class;
+//        下面的方式不能用来获取私有化的属性
+//        Field id = clazz.getDeclaredField("id");
+//        id.set(student, 1);
+//        id.get(student);
+//        System.out.println(id.get(student));
+        Method setId = clazz.getMethod("setId", int.class);
+        setId.invoke(student, 1);
+        Method getId = clazz.getMethod("getId", null);
+        Object invoke = getId.invoke(student, null);
+        System.out.println(invoke);
+    }
+}
+```
+
+## 通过反射调用构造器
+
+```java
+package test;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        Class clazz = Student.class;
+        //可以通过反射的方式去创建对象：即调用对象的构造器即可
+        // 在构造的时候给他加上Student泛型就可以了
+        Constructor<Student> constructor = clazz.getConstructor(null);
+        Student student = constructor.newInstance(null);
+        Method setId = clazz.getDeclaredMethod("setId", int.class);
+        setId.invoke(student, 1);
+        Method getId = clazz.getDeclaredMethod("getId", null);
+        Object invoke = getId.invoke(student, null);
+        System.out.println(invoke);
+    }
+}
+```
+
+# 网络编程
+
+如何使用 Java 开发基于 Web 的应用
+
+## IP 和端口
+
+IP：互联网中的每台终端设备(即能上网的设备)都有一个唯一标识，网络中的请求可以根据这个标识找到具体的终端，这个唯一标识就是 IP。
+
+端口：跟 IP 结合起来的概念，一台设备中有多个应用，端口就是不同应用的标记号。localhost:3306 （localhost 表明是自己访问的是自己本地的内容即本机的内容）
+
+## TCP 协议
+
+网络中有超多的终端，如何保证他们之间的链接能正常进行呢？->TCP 协议
+TCP 面向连接的运输层协议，比较复杂，优点是比较安全，缺点是效率低。
+使用 TCP 协议前必须先建立连接，才能传输数据，数据传输完毕之后需要释放连接。
+相当于日常生活中的打电话，必须首先打通电话才能说话，说完话之后要挂断电话。
+什么时候使用 TCP 协议？->对安全性要求比较高的系统比如金融系的系统才会使用 TCP 协议。
+
+ServerSocket
+
+| 方法                                                          | 描述                                                                                                                 |
+| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| public ServerSocket(int port)                                 | 根据端口创建 ServerSocket 对象,自己对自己本地资源进行访问                                                            |
+| public ServerSocket(int port,int backlog,InetAddress address) | 根据端口、backlog、IP 地址创建对象                                                                                   |
+| public Socket accept()                                        | 创建完接口信息之后，等待客户端请求访问我们，如果访问成功了，就返回 Socket 对象，通过返回 Socket 对象进行数据的传输。 |
+| public void close()                                           | 关闭 ServerSocket                                                                                                    |
+
+API：Socket
+Socket 相当于是一次通话操作
+
+| 方法                                     | 描述                                   |
+| ---------------------------------------- | -------------------------------------- |
+| public Socket(String host,int port)      | 根据主机、端口创建要连接的 Socket 对象 |
+| public Socket(InetAddress host,int port) | 根据 IP、端口创建要连接的 Socket 对象  |
+| public InputStream getInputStream()      | 获取 Socket 输入流                     |
+| public synchronized void close()         | 以线程安全的方式 关闭 Socket           |
+
+<!-- 建立从客户端->服务器之间的创建链接以及发出请求的示例 -->
+
+```java
+public class Client { //客户端
+    public static void main(String[] args) {
+        Socket socket = null;
+        OutputStream outputStream = null;
+        InputStream inputStream = null;
+        DataOutputStream dataOutputStream = null;
+        DataInputStream dataInputStream = null;
+        socket = new Socket("127.0.0.1", 8080);
+        System.out.println("---------------------客户端---------------------");
+//        给服务器发消息
+        String request = "你好";
+        System.out.println("客户端说：" + request);
+        outputStream = socket.getOutputStream();
+        dataOutputStream = new DataOutputStream(outputStream);
+        dataOutputStream.writeUTF(request);
+
+    }
+}
+
+```
+
+```java
+public class Test {
+    public static void main(String[] args) throws Exception{
+//        首先构造serversocket 对象，顺便把Socket对象也给创建好
+        ServerSocket serverSocket = null;
+        Socket socket = null;
+//        把InputStream和Outputstream都构造好
+        OutputStream outputStream = null;
+        InputStream inputStream = null;
+//        DataInputStream也给构造好，是针对于Inputstream的封装，更方便于去读取数据。
+        DataInputStream dataInputStream = null;
+//        DataInputStream也给构造好，是针对于Outputstream的封装，更方便于去读取数据。
+        DataOutputStream dataOutputStream = null;
+//        创建serversocket应用，端口号是8080，其他人可以通过端口号去访问它
+        serverSocket = new ServerSocket(8080);
+        System.out.println("-------------------------服务端-------------------------");
+        System.out.println("已启动，等待接受客户请求。。。");
+        socket = serverSocket.accept();
+        inputStream = socket.getInputStream();
+        dataInputStream = new DataInputStream(inputStream);
+        String request = dataInputStream.readUTF();
+        System.out.println("接收到了客户端请求：" + request);
+    }
+}
+
+```
+
+<!-- 服务器端对客户端做出相应 -->
+
+```java
+package test;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        ServerSocket serverSocket = null;
+        Socket socket = null;
+        OutputStream outputStream = null;
+        InputStream inputStream = null;
+        DataInputStream dataInputStream = null;
+        DataOutputStream dataOutputStream = null;
+        serverSocket = new ServerSocket(8080);
+        System.out.println("------服务端------");
+        System.out.println("已启动，等待接收客户端请求...");
+        socket = serverSocket.accept();
+        inputStream = socket.getInputStream();
+        dataInputStream = new DataInputStream(inputStream);
+        String request = dataInputStream.readUTF();
+        System.out.println("接收到了客户端请求：" + request);
+        String response = "Hello World";
+        outputStream = socket.getOutputStream();
+        dataOutputStream = new DataOutputStream(outputStream);
+        dataOutputStream.writeUTF(response);
+        System.out.println("给客户端做出响应：" + response);
+        inputStream.close();
+        dataInputStream.close();
+        outputStream.close();
+        dataOutputStream.close();
+        socket.close();
+        serverSocket.close();
+    }
+}
+```
+
+```java
+package test;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+
+public class Client {
+    public static void main(String[] args) throws Exception {
+        Socket socket = null;
+        OutputStream outputStream = null;
+        InputStream inputStream = null;
+        DataOutputStream dataOutputStream = null;
+        DataInputStream dataInputStream = null;
+        socket = new Socket("127.0.0.1", 8080);
+        System.out.println("------客户端------");
+        //给服务器发消息
+        String request = "你好";
+        System.out.println("客户端说：" + request);
+        outputStream = socket.getOutputStream();
+        dataOutputStream = new DataOutputStream(outputStream);
+        dataOutputStream.writeUTF(request);
+        inputStream = socket.getInputStream();
+        dataInputStream = new DataInputStream(inputStream);
+        String response = dataInputStream.readUTF();
+        System.out.println("服务器响应：" + response);
+        inputStream.close();
+        dataInputStream.close();
+        outputStream.close();
+        dataOutputStream.close();
+        socket.close();
+    }
+}
+```
+
+## UDP 协议
+
+TCP 优点是稳定安全，缺点是效率低；
+UDP 恰好相反，优点是快速，效率高，缺点是不安全即数据包有可能会丢失，如，云聊天，视频聊天会出现声音有杂音，偶尔卡顿的情况。
+
+API1：DatagramSocket
+DatagramSocket
+
+| 方法                                          | 描述                             |
+| --------------------------------------------- | -------------------------------- |
+| public DatagramSocket(int port)               | 根据端口创建 DatagramSocket 对象 |
+| public void send(DatagramPacket p)            | 发送数据包                       |
+| public synchronized receive(DatagramPacket p) | 接收数据包                       |
+
+API2：DatagramPacket
+DatagramPacket
+
+| 方法                                                                      | 描述                                                            |
+| ------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| public DatagramPacket(byte buf[],int length,InetAddress address,int port) | 根据发送的数据、数据长度、IP 地址、端口创建 DatagramPacket 对象 |
+| public synchronized byte[] getData()                                      | 获取接收的数据                                                  |
+| public synchronized int getLength()                                       | 获取数据长度                                                    |
+| public synchronized int getPort()                                         | 获取发送数据的 Socket 端口                                      |
+
+```java
+package test;
+
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketAddress;
+
+// TerminalA接收到TerminalB的消息并且返回消息给TerminalB
+public class TerminalA {
+    public static void main(String[] args) throws Exception {
+        byte[] buff = new byte[1024];
+        DatagramPacket datagramPacket = new DatagramPacket(buff, buff.length);
+        DatagramSocket datagramSocket = new DatagramSocket(8181);
+        datagramSocket.receive(datagramPacket);
+        String message = new String(datagramPacket.getData(),0,datagramPacket.getLength());
+        System.out.println("我是TerminalA，接收到了" + datagramPacket.getPort() + "传来的数据：" + message);
+        String reply = "我是TerminalA，已接收到你发来的数据";
+        SocketAddress socketAddress = datagramPacket.getSocketAddress();
+        DatagramPacket datagramPacket1 = new DatagramPacket(reply.getBytes(), reply.getBytes().length,socketAddress);
+        datagramSocket.send(datagramPacket1);
+    }
+}
+```
+
+```java
+package test;
+
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketAddress;
+
+// TerminalB连接到TerminalA并且发出消息后接收到了TerminalA返回的数据
+public class TerminalB {
+    public static void main(String[] args) throws Exception {
+        String message = "我是TerminalB，你好！";
+        InetAddress inetAddress = InetAddress.getByName("localhost");
+        DatagramPacket datagramPacket = new DatagramPacket(message.getBytes(), message.getBytes().length,inetAddress,8181);
+        DatagramSocket datagramSocket = new DatagramSocket(8080);
+        datagramSocket.send(datagramPacket);
+        byte[] buff = new byte[1024];
+        DatagramPacket datagramPacket1 = new DatagramPacket(buff, buff.length);
+        datagramSocket.receive(datagramPacket1);
+        String reply = new String(datagramPacket1.getData(),0,datagramPacket1.getLength());
+        System.out.println("我是TerminalB，接收到了" + datagramPacket1.getPort() + "返回的数据：" + reply);
+    }
+}
+```
+
+## 多线程下的网络编程
+
+run 的顺序：服务器端线程 ServerThread -> 客户端线程 ClientThread ->
+启动多线程来了一百个请求之后，用线程来处理它，这样的话，服务器端线程 ServerThread 就实现了异步也就是同时处理了 100 个处理。
+（复习一下异步和同步的概念：
+同步是指多个线程按顺序一个接一个执行，排队执行
+异步是指多个线程同时执行
+）
+
+服务器端线程 ServerThread 的控制台输出的结果：
+服务器已启动...
+我是客户端 3
+我是客户端 5
+我是客户端 27
+我是客户端 22
+我是客户端 13
+我是客户端 17
+我是客户端 21
+我是客户端 10
+我是客户端 12
+我是客户端 9
+我是客户端 18
+我是客户端 6
+我是客户端 15
+我是客户端 26
+我是客户端 14
+我是客户端 24
+我是客户端 23
+我是客户端 0
+我是客户端 25
+我是客户端 2
+我是客户端 20
+我是客户端 19
+我是客户端 28
+我是客户端 8
+我是客户端 4
+我是客户端 16
+我是客户端 29
+我是客户端 7
+我是客户端 1
+我是客户端 11
+我是客户端 32
+我是客户端 35
+我是客户端 31
+我是客户端 34
+我是客户端 30
+我是客户端 33
+我是客户端 37
+我是客户端 38
+我是客户端 36
+我是客户端 40
+我是客户端 47
+我是客户端 43
+我是客户端 44
+我是客户端 42
+我是客户端 48
+我是客户端 45
+我是客户端 39
+我是客户端 49
+我是客户端 55
+我是客户端 46
+我是客户端 60
+我是客户端 59
+我是客户端 53
+我是客户端 50
+我是客户端 56
+我是客户端 57
+我是客户端 41
+我是客户端 52
+我是客户端 51
+我是客户端 54
+我是客户端 62
+我是客户端 58
+我是客户端 64
+我是客户端 63
+我是客户端 61
+我是客户端 65
+我是客户端 66
+我是客户端 67
+我是客户端 68
+我是客户端 69
+我是客户端 70
+我是客户端 71
+我是客户端 74
+我是客户端 73
+我是客户端 76
+我是客户端 75
+我是客户端 72
+我是客户端 82
+我是客户端 77
+我是客户端 78
+我是客户端 79
+我是客户端 80
+我是客户端 81
+我是客户端 84
+我是客户端 85
+我是客户端 83
+我是客户端 86
+我是客户端 93
+我是客户端 88
+我是客户端 94
+我是客户端 89
+我是客户端 95
+我是客户端 91
+我是客户端 96
+我是客户端 97
+我是客户端 98
+我是客户端 92
+我是客户端 99
+我是客户端 87
+我是客户端 90
+
+```java
+package test;
+
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ServerThread {
+    public static void main(String[] args) throws Exception {
+        ServerSocket serverSocket = new ServerSocket(8080);
+        System.out.println("服务器已启动...");
+        while (true) {
+            Socket socket = serverSocket.accept();
+            new Thread(new ServerRunnable(socket)).start();
+        }
+    }
+}
+```
+
+```java
+package test;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
+
+public class ServerRunnable implements Runnable {
+    private Socket socket;
+
+    public ServerRunnable(Socket socket) {
+        this.socket = socket;
+    }
+
+    @Override
+    public void run() {
+        InputStream inputStream = null;
+        DataInputStream dataInputStream = null;
+        try {
+            inputStream = this.socket.getInputStream();
+            dataInputStream = new DataInputStream(inputStream);
+            String message = dataInputStream.readUTF();
+            System.out.println(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputStream.close();
+                dataInputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+```
+
+```java
+package test;
+
+public class ClientThread {
+    public static void main(String[] args) {
+        for (int i = 0; i < 100; i++) {
+            new Thread(new ClientRunnable(i)).start();
+        }
+    }
+}
+```
+
+```java
+package test;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
+
+public class ClientRunnable implements Runnable {
+
+    private int num;
+
+    public ClientRunnable(int num) {
+        this.num = num;
+    }
+
+    @Override
+    public void run() {
+        Socket socket = null;
+        OutputStream outputStream = null;
+        DataOutputStream dataOutputStream = null;
+        try {
+            socket = new Socket("localhost", 8080);
+            String message = "我是客户端"+this.num;
+            outputStream = socket.getOutputStream();
+            dataOutputStream = new DataOutputStream(outputStream);
+            dataOutputStream.writeUTF(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                dataOutputStream.close();
+                outputStream.close();
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
 ```
